@@ -15,64 +15,62 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { PlaylistMakerApp() }
+        setContent {
+            PlaylistMakerTheme {
+                PlaylistMakerApp()
+            }
+        }
     }
 }
 
 @Composable
-@Preview
 fun PlaylistMakerApp() {
-    // общий белый фон
-    Surface(color = Color.White) {
+    Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
+            modifier = Modifier.fillMaxSize()
         ) {
-            // синяя шапка
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF3772E7))
+                    .background(MaterialTheme.colorScheme.primary)
                     .height(80.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     text = "Playlist maker",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.W500,
                     modifier = Modifier.padding(start = 16.dp, bottom = 20.dp)
                 )
             }
 
-            // белый блок с пунктами меню
             Surface(
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                color = Color.White, // один цвет с фоном
+                color = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset(y = (-16).dp)
             ) {
                 val context = androidx.compose.ui.platform.LocalContext.current
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(Color.White) // дублируем, чтобы MenuItem совпадал
-                ) {
-                    MenuItem("Поиск", R.drawable.ic_search) {
+                Column(Modifier.fillMaxWidth()) {
+                    MenuItem(
+                        title = "Поиск",
+                        iconRes = R.drawable.ic_search,
+                        modifier = Modifier.padding(top = 12.dp) // отступ сверху
+                    ) {
                         context.startActivity(Intent(context, SearchActivity::class.java))
                     }
                     MenuItem("Плейлисты", R.drawable.ic_playlist) { /* TODO */ }
@@ -87,13 +85,17 @@ fun PlaylistMakerApp() {
 }
 
 @Composable
-fun MenuItem(title: String, iconRes: Int, onClick: () -> Unit) {
+fun MenuItem(
+    title: String,
+    iconRes: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(Color.White) // теперь совпадает с общим фоном
             .clickable(onClick = onClick)
-            .padding(horizontal = 30.dp, vertical = 16.dp),
+            .padding(horizontal = 30.dp, vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -101,7 +103,7 @@ fun MenuItem(title: String, iconRes: Int, onClick: () -> Unit) {
             contentDescription = title,
             tint = MaterialTheme.colorScheme.onSurface
         )
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(14.dp))
         Text(
             text = title,
             fontSize = 22.sp,
@@ -111,7 +113,7 @@ fun MenuItem(title: String, iconRes: Int, onClick: () -> Unit) {
         Icon(
             painter = painterResource(id = R.drawable.ic_arrow_right),
             contentDescription = "arrow",
-            tint = Color(0xFFB0B0B0)
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
         )
     }
 }
