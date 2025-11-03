@@ -2,6 +2,11 @@ package com.practicum.playlistmaker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val PrimaryBackground = Color(0xFF111016)
+val SecondaryBackground = Color(0xFF1C1B22)
+val PrimaryAccent = Color(0xFFFF2A75)
+val SubText = Color(0xFF8F8F99)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
