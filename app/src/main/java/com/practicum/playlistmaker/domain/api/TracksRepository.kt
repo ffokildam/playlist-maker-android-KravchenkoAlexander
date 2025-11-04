@@ -3,6 +3,6 @@ package com.practicum.playlistmaker.domain.api
 import com.practicum.playlistmaker.domain.Track
 
 interface TracksRepository {
-    fun searchTracks(expression: String): List<Track>
+    suspend fun searchTracks(expression: String): List<Track>
 }
 

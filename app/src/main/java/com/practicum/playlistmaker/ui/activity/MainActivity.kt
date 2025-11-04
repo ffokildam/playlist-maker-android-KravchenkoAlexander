@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,3 +21,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

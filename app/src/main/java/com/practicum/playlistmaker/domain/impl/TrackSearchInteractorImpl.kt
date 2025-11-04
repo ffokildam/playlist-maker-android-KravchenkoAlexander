@@ -7,7 +7,7 @@ import com.practicum.playlistmaker.presentation.TrackModel
 
 class TrackSearchInteractorImpl(private val repository: TracksRepository) : TrackSearchInteractor {
 
-    override fun searchTracks(expression: String): List<Track> {
+    override suspend fun searchTracks(expression: String): List<Track> {
         return repository.searchTracks(expression)
     }
 

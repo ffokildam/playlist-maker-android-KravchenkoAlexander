@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.presentation.TrackModel
 
 interface TrackSearchInteractor {
-    fun searchTracks(expression: String): List<Track>
+    suspend fun searchTracks(expression: String): List<Track>
     
     fun loadTrackData(
         trackId: String,
