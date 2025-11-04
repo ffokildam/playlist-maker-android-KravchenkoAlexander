@@ -6,8 +6,10 @@ import androidx.compose.ui.graphics.Color
 val LightBackground = Color(0xFFFFFFFF)
 val LightSurface = Color(0xFFFFFFFF)
 val LightOnSurface = Color(0xFF000000)
+val LightSearchField = Color(0xFFE6E8EB) // серый фон поля поиска
 
 // Тёмная тема
-val DarkBackground = Color(0xFF121212)
-val DarkSurface = Color(0xFF1E1E1E)
+val DarkBackground = Color(0xFF161617)
+val DarkSurface = Color(0xFF161617)
 val DarkOnSurface = Color(0xFFFFFFFF)
+val DarkSearchField = Color(0xFFFFFFFF) // белое поле поиска
