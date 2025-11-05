@@ -6,3 +6,4 @@ interface NetworkClient {
     fun doRequest(dto: Any): BaseResponse
 }
 
+
