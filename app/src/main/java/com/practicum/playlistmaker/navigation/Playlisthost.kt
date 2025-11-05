@@ -1,12 +1,14 @@
 package com.practicum.playlistmaker.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.practicum.playlistmaker.MainScreen
 import com.practicum.playlistmaker.SearchScreen
 import com.practicum.playlistmaker.SettingsScreen
+import com.practicum.playlistmaker.presentation.SearchViewModel
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
@@ -23,7 +25,11 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.Search.name) {
-            SearchScreen(onBackClick = { navController.popBackStack() })
+            val vm: SearchViewModel = viewModel(factory = SearchViewModel.getViewModelFactory())
+            SearchScreen(
+                onBackClick = { navController.popBackStack() },
+                viewModel = vm,
+            )
         }
 
         composable(Screen.Settings.name) {

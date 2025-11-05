@@ -3,6 +3,7 @@ package com.practicum.playlistmaker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,23 +23,35 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import com.practicum.playlistmaker.presentation.SearchState
+import com.practicum.playlistmaker.presentation.SearchViewModel
 import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
+import com.practicum.playlistmaker.domain.Track
 
 class SearchActivity : ComponentActivity() {
+    private val searchViewModel by viewModels<SearchViewModel> {
+        SearchViewModel.getViewModelFactory()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PlaylistMakerTheme {
-                SearchScreen(onBackClick = { finish() })
+                SearchScreen(
+                    onBackClick = { finish() },
+                    viewModel = searchViewModel,
+                )
             }
         }
     }
 }
 
 @Composable
-fun SearchScreen(onBackClick: () -> Unit) {
+fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
     var query by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
+    val screenState by viewModel.searchScreenState.collectAsState()
 
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -114,6 +127,7 @@ fun SearchScreen(onBackClick: () -> Unit) {
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(onSearch = {
                                 focusManager.clearFocus()
+                                viewModel.search(query)
                             }),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -131,6 +145,66 @@ fun SearchScreen(onBackClick: () -> Unit) {
                     }
                 }
             }
+
+            when (screenState) {
+                is SearchState.Initial -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Введите строку для поиска")
+                    }
+                }
+                is SearchState.Searching -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is SearchState.Success -> {
+                    val tracks = (screenState as SearchState.Success).list
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp)
+                    ) {
+                        items(tracks) { track ->
+                            TrackListItem(track)
+                            Divider(thickness = 0.5.dp, color = Color.LightGray)
+                        }
+                    }
+                }
+                is SearchState.Fail -> {
+                    val error = (screenState as SearchState.Fail).error
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Ошибка: $error", color = Color.Red)
+                    }
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun TrackListItem(track: Track) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = track.trackName, style = MaterialTheme.typography.bodyLarge)
+            Text(text = track.artistName, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Text(text = track.trackTime, style = MaterialTheme.typography.bodyMedium)
     }
 }
