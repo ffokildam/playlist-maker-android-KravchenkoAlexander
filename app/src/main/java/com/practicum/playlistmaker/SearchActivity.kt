@@ -1,17 +1,17 @@
 package com.practicum.playlistmaker
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -25,6 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.platform.LocalContext
 import com.practicum.playlistmaker.presentation.SearchState
 import com.practicum.playlistmaker.presentation.SearchViewModel
 import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
@@ -69,7 +73,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
             ) {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onSurface
                     )
@@ -99,11 +103,20 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                         .padding(horizontal = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
+                    IconButton(
+                        onClick = {
+                            if (query.isNotEmpty()) {
+                                focusManager.clearFocus()
+                                viewModel.search(query)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.width(8.dp))
 
@@ -118,7 +131,12 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
 
                         BasicTextField(
                             value = query,
-                            onValueChange = { query = it },
+                            onValueChange = {
+                                query = it
+                                if (it.isEmpty()) {
+                                    viewModel.resetState()
+                                }
+                            },
                             singleLine = true,
                             textStyle = LocalTextStyle.current.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -135,7 +153,10 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
 
                     if (query.isNotEmpty()) {
                         Spacer(modifier = Modifier.width(8.dp))
-                        IconButton(onClick = { query = "" }) {
+                        IconButton(onClick = {
+                            query = ""
+                            viewModel.resetState()
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Clear",
@@ -174,7 +195,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                     ) {
                         items(tracks) { track ->
                             TrackListItem(track)
-                            Divider(thickness = 0.5.dp, color = Color.LightGray)
+                            HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
                         }
                     }
                 }
@@ -195,9 +216,13 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
 
 @Composable
 private fun TrackListItem(track: Track) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                Toast.makeText(context, track.trackName, Toast.LENGTH_SHORT).show()
+            }
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
