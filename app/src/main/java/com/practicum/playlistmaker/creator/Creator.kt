@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.creator
 
 import com.practicum.playlistmaker.data.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
@@ -9,7 +9,7 @@ import com.practicum.playlistmaker.presentation.TrackPlayer
 import com.practicum.playlistmaker.presentation.TrackPlayerImpl
 
 object Creator {
-    private val storage = com.practicum.playlistmaker.creator.Storage()
+    private val storage = Storage()
 
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(storage))
@@ -27,4 +27,3 @@ object Creator {
         return TrackPlayerImpl()
     }
 }
-
