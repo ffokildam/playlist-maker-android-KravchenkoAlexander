@@ -1,10 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.screen
 
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -31,25 +27,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
 import com.practicum.playlistmaker.presentation.SearchState
 import com.practicum.playlistmaker.presentation.SearchViewModel
-import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 import com.practicum.playlistmaker.domain.Track
 
-class SearchActivity : ComponentActivity() {
-    private val searchViewModel by viewModels<SearchViewModel> {
-        SearchViewModel.getViewModelFactory()
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            PlaylistMakerTheme {
-                SearchScreen(
-                    onBackClick = { finish() },
-                    viewModel = searchViewModel,
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
@@ -66,7 +45,6 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            // Верхняя панель
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -86,7 +64,6 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                 )
             }
 
-            // Поле поиска
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,8 +76,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 12.dp),
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(

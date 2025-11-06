@@ -5,9 +5,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.practicum.playlistmaker.MainScreen
-import com.practicum.playlistmaker.SearchScreen
-import com.practicum.playlistmaker.SettingsScreen
+import com.practicum.playlistmaker.ui.screen.MainScreen
+import com.practicum.playlistmaker.ui.screen.SearchScreen
+import com.practicum.playlistmaker.ui.screen.SettingsScreen
 import com.practicum.playlistmaker.presentation.SearchViewModel
 
 @Composable

@@ -1,10 +1,7 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.screen
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -21,18 +18,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
-
-class SettingsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            PlaylistMakerTheme {
-                SettingsScreen(onBackClick = { finish() })
-            }
-        }
-    }
-}
+import com.practicum.playlistmaker.R
 
 @Composable
 fun SettingsScreen(onBackClick: () -> Unit) {
