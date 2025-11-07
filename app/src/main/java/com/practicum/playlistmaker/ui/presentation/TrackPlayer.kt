@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.ui.presentation
 
 interface TrackPlayer {
     // 1

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.navigation
+package com.practicum.playlistmaker.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import com.practicum.playlistmaker.ui.screen.MainScreen
 import com.practicum.playlistmaker.ui.screen.SearchScreen
 import com.practicum.playlistmaker.ui.screen.SettingsScreen
-import com.practicum.playlistmaker.presentation.SearchViewModel
+import com.practicum.playlistmaker.ui.presentation.SearchViewModel
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {

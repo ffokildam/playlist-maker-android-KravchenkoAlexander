@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.ui.presentation
 
 sealed class TrackScreenState {
     object Loading : TrackScreenState()

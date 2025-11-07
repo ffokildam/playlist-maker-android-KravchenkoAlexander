@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +29,6 @@ fun MainScreen(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize()
         ) {
-            // app bar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -45,7 +45,6 @@ fun MainScreen(
                 )
             }
 
-            // белый блок
             Surface(
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 color = MaterialTheme.colorScheme.surface,
@@ -55,14 +54,14 @@ fun MainScreen(
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     MenuItem(
-                        title = "Поиск",
+                        title = R.string.search,
                         iconRes = R.drawable.ic_search,
                         modifier = Modifier.padding(top = 12.dp),
                         onClick = onNavigateToSearch
                     )
-                    MenuItem("Плейлисты", R.drawable.ic_playlist) { /* TODO */ }
-                    MenuItem("Избранное", R.drawable.ic_favorite) { /* TODO */ }
-                    MenuItem("Настройки", R.drawable.ic_settings, onClick = onNavigateToSettings)
+                    MenuItem(R.string.playlist, R.drawable.ic_playlist) { /* TODO */ }
+                    MenuItem(R.string.favourites, R.drawable.ic_favorite) { /* TODO */ }
+                    MenuItem(R.string.settings, R.drawable.ic_settings, onClick = onNavigateToSettings)
                 }
             }
         }
@@ -71,7 +70,7 @@ fun MainScreen(
 
 @Composable
 private fun MenuItem(
-    title: String,
+    title: Int,
     iconRes: Int,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -85,12 +84,12 @@ private fun MenuItem(
     ) {
         Icon(
             painter = painterResource(id = iconRes),
-            contentDescription = title,
+            contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.width(14.dp))
         Text(
-            text = title,
+            text = stringResource(id = title),
             fontSize = 22.sp,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)

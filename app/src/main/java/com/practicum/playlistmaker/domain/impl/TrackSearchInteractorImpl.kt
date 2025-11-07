@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.domain.impl
 import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.domain.api.TrackSearchInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
-import com.practicum.playlistmaker.presentation.TrackModel
+import com.practicum.playlistmaker.ui.presentation.TrackModel
 
 class TrackSearchInteractorImpl(private val repository: TracksRepository) : TrackSearchInteractor {
 

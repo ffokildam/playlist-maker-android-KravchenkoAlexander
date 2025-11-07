@@ -16,4 +16,15 @@
 <string name="no_email_client">На устройстве не найдено приложение для отправки email</string>
 
 <string name="terms_url">https://practicum.yandex.ru/</string>
+    <string name="no_email_client_error">Почтовое приложение не найдено</string>
+    <string name="playlist">Плейлисты</string>
+    <string name="search">Поиск</string>
+    <string name="favourites">Избранное</string>
+    <string name="settings">Настройки</string>
+
+    <string name="search_title">Поиск</string>
+    <string name="search_placeholder">Поиск</string>
+    <string name="search_hint_initial">Введите строку для поиска</string>
+    <string name="search_error">Ошибка: %1$s</string>
+
 </resources>

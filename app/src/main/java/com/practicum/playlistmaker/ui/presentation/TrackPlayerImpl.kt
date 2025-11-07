@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.ui.presentation
 
 class TrackPlayerImpl : TrackPlayer {
     private var currentObserver: TrackPlayer.StatusObserver? = null
