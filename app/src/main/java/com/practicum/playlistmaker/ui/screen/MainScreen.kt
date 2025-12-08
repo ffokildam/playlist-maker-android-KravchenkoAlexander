@@ -21,7 +21,9 @@ import com.practicum.playlistmaker.R
 @Composable
 fun MainScreen(
     onNavigateToSearch: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToPlaylists: () -> Unit,
+    onNavigateToFavorites: () -> Unit
 ) {
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
@@ -59,8 +61,8 @@ fun MainScreen(
                         modifier = Modifier.padding(top = 12.dp),
                         onClick = onNavigateToSearch
                     )
-                    MenuItem(R.string.playlist, R.drawable.ic_playlist) { /* TODO */ }
-                    MenuItem(R.string.favourites, R.drawable.ic_favorite) { /* TODO */ }
+                    MenuItem(R.string.playlist, R.drawable.ic_playlist, onClick = onNavigateToPlaylists)
+                    MenuItem(R.string.favourites, R.drawable.ic_favorite, onClick = onNavigateToFavorites)
                     MenuItem(R.string.settings, R.drawable.ic_settings, onClick = onNavigateToSettings)
                 }
             }

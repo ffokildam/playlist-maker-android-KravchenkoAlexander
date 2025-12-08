@@ -26,5 +26,27 @@
     <string name="search_placeholder">Поиск</string>
     <string name="search_hint_initial">Введите строку для поиска</string>
     <string name="search_error">Ошибка: %1$s</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="clear_search">Clear Search</string>
+    <string name="songs">Песни</string>
+    <string name="search_songs_placeholder">Поиск песен</string>
+    <string name="no_songs_found">Ничего не найдено</string>
+    <string name="error">Ошибка</string>
+    <string name="add_playlist">Добавить плейлист</string>
+    <string name="playlist_name">Название плейлиста</string>
+    <string name="playlist_description">Описание плейлиста</string>
+    <string name="save">Сохранить</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="select_playlist">Выберите плейлист</string>
+    <string name="duration">Длительность</string>
+    <string name="tracks_count_one">%1$d трек</string>
+    <string name="tracks_count_few">%1$d трека</string>
+    <string name="tracks_count_many">%1$d треков</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="empty_media_library">Ваша медиатека пуста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="playlist_name_required">Название*</string>
+    <string name="create">Создать</string>
 
 </resources>

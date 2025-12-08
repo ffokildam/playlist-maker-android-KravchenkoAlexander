@@ -31,7 +31,11 @@ import com.practicum.playlistmaker.ui.presentation.SearchState
 import com.practicum.playlistmaker.ui.presentation.SearchViewModel
 
 @Composable
-fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
+fun SearchScreen(
+    onBackClick: () -> Unit,
+    viewModel: SearchViewModel,
+    onTrackClick: (Track) -> Unit = {}
+) {
     var query by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val screenState by viewModel.searchScreenState.collectAsState()
@@ -152,10 +156,12 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                             .fillMaxWidth()
                             .padding(top = 12.dp)
                     ) {
-                        items(tracks) { track ->
-                            TrackListItem(track)
-                            HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                    items(tracks) { track ->
+                        TrackListItem(track) {
+                            onTrackClick(track)
                         }
+                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                    }
                     }
                 }
 
@@ -177,13 +183,11 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
 }
 
 @Composable
-private fun TrackListItem(track: Track) {
+fun TrackListItem(track: Track, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-
-            }
+            .clickable(onClick = onClick)
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
