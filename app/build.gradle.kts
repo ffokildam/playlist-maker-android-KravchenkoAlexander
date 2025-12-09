@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -68,5 +69,14 @@ dependencies {
     
     // Coil for image loading
     implementation(libs.coil.compose)
+    
+    // Room database
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
 }

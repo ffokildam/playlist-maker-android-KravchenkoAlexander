@@ -1,30 +1,24 @@
 package com.practicum.playlistmaker.ui.presentation
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.data.PlaylistsRepositoryImpl
+import com.practicum.playlistmaker.PlaylistMakerApplication
 import com.practicum.playlistmaker.domain.Playlist
 import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.domain.api.PlaylistsRepository
 import com.practicum.playlistmaker.domain.api.TracksRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-class PlaylistsViewModel() : ViewModel() {
-    private val playlistsRepository: PlaylistsRepository = PlaylistsRepositoryImpl(scope = viewModelScope)
-    private val tracksRepository: TracksRepository = Creator.provideTracksRepository(viewModelScope)
+class PlaylistsViewModel(application: Application) : AndroidViewModel(application) {
+    private val app = application as PlaylistMakerApplication
+    private val playlistsRepository: PlaylistsRepository = app.providePlaylistsRepository()
+    private val tracksRepository: TracksRepository = app.provideTracksRepository()
 
-    val playlists: Flow<List<Playlist>> = flow {
-        val collectedPlaylists = mutableListOf<Playlist>()
-        playlistsRepository.getAllPlaylists().collect { playlist ->
-            collectedPlaylists.addAll(playlist)
-            emit(collectedPlaylists.toList())
-        }
-    }
+    val playlists: Flow<List<Playlist>> = playlistsRepository.getAllPlaylists()
     val favoriteList: Flow<List<Track>> = tracksRepository.getFavoriteTracks()
 
     fun createNewPlayList(namePlaylist: String, description: String) {

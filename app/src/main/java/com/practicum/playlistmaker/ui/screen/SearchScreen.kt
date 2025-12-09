@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -142,10 +143,38 @@ fun SearchScreen(
             }
 
             when (screenState) {
-                is SearchState.Initial -> Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) { Text(text = "") }
+                is SearchState.Initial -> {
+                    val history by viewModel.searchHistory.collectAsState()
+                    if (history.isNotEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                history.forEachIndexed { index, historyItem ->
+                                    HistoryItem(
+                                        text = historyItem,
+                                        onClick = {
+                                            query = historyItem
+                                            viewModel.search(historyItem)
+                                        }
+                                    )
+                                    if (index < history.size - 1) {
+                                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
                 is SearchState.Searching -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -230,5 +259,32 @@ fun TrackListItem(track: Track, onClick: () -> Unit = {}) {
             )
         }
         Text(text = track.trackTime, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+fun HistoryItem(
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Default.Refresh,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
