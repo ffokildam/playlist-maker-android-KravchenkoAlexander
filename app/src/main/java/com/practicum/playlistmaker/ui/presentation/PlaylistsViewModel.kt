@@ -2,10 +2,8 @@ package com.practicum.playlistmaker.ui.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.data.PlaylistsRepositoryImpl
-import com.practicum.playlistmaker.data.TracksRepositoryImpl
-import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
-import com.practicum.playlistmaker.creator.Storage
 import com.practicum.playlistmaker.domain.Playlist
 import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.domain.api.PlaylistsRepository
@@ -18,10 +16,7 @@ import kotlinx.coroutines.launch
 
 class PlaylistsViewModel() : ViewModel() {
     private val playlistsRepository: PlaylistsRepository = PlaylistsRepositoryImpl(scope = viewModelScope)
-    private val tracksRepository: TracksRepository = TracksRepositoryImpl(
-        networkClient = RetrofitNetworkClient(Storage()),
-        scope = viewModelScope
-    )
+    private val tracksRepository: TracksRepository = Creator.provideTracksRepository(viewModelScope)
 
     val playlists: Flow<List<Playlist>> = flow {
         val collectedPlaylists = mutableListOf<Playlist>()
