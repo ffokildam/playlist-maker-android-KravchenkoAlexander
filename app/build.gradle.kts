@@ -65,5 +65,8 @@ dependencies {
     // Retrofit for network requests
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
+    
+    // Coil for image loading
+    implementation(libs.coil.compose)
 
 }

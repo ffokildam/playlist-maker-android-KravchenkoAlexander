@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.ui.presentation.PlaylistsViewModel
@@ -127,12 +128,22 @@ fun FavoriteTrackListItem(track: Track, onClick: () -> Unit) {
                 .background(Color(0xFFE0E0E0)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                modifier = Modifier.size(32.dp),
-                painter = painterResource(id = R.drawable.ic_playlist),
-                contentDescription = null,
-                tint = Color.Gray
-            )
+            if (track.artworkUrl100 != null) {
+                AsyncImage(
+                    model = track.artworkUrl100,
+                    contentDescription = track.trackName,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(4.dp))
+                )
+            } else {
+                Icon(
+                    modifier = Modifier.size(32.dp),
+                    painter = painterResource(id = R.drawable.ic_playlist),
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(16.dp))

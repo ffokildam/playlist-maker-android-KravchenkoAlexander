@@ -25,7 +25,9 @@ class TracksRepositoryImpl(
                     id = it.id,
                     trackName = it.trackName,
                     artistName = it.artistName,
-                    trackTime = trackTime
+                    trackTime = trackTime,
+                    artworkUrl100 = it.image,
+                    previewUrl = it.previewUrl
                 )
             }
         } else {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.Playlist
 import com.practicum.playlistmaker.domain.Track
@@ -82,18 +84,29 @@ fun TrackDetailsScreen(
                 Box(
                     modifier = Modifier
                         .size(260.dp)
+                        .clip(RoundedCornerShape(12.dp))
                         .background(
                             color = Color.LightGray,
                             shape = RoundedCornerShape(12.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        modifier = Modifier.size(120.dp),
-                        painter = painterResource(id = R.drawable.ic_playlist),
-                        contentDescription = null,
-                        tint = Color.Gray
-                    )
+                    if (track.artworkUrl100 != null) {
+                        AsyncImage(
+                            model = track.artworkUrl100,
+                            contentDescription = track.trackName,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(12.dp))
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier.size(120.dp),
+                            painter = painterResource(id = R.drawable.ic_playlist),
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
+                    }
                 }
             }
 
