@@ -1,5 +1,11 @@
 package com.practicum.playlistmaker.ui.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,17 +17,26 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.ui.presentation.PlaylistsViewModel
+import com.practicum.playlistmaker.data.util.ImageStorage
+import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 @Composable
 fun CreatePlaylistScreen(
@@ -30,6 +45,28 @@ fun CreatePlaylistScreen(
 ) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var coverImageUri by remember { mutableStateOf<String?>(null) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            selectedImageUri = it
+            coverImageUri = it.toString()
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            imagePickerLauncher.launch("image/*")
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -70,17 +107,41 @@ fun CreatePlaylistScreen(
             Box(
                 modifier = Modifier
                     .size(300.dp)
-                    .clip(RoundedCornerShape(4.dp)),
+                    .clip(RoundedCornerShape(4.dp))
+                    .clickable {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            imagePickerLauncher.launch("image/*")
+                        } else {
+                            when {
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE
+                                ) == PackageManager.PERMISSION_GRANTED -> {
+                                    imagePickerLauncher.launch("image/*")
+                                }
+                                else -> {
+                                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                }
+                            }
+                        }
+                    },
                 contentAlignment = Alignment.Center
-
             ) {
-                Icon(
-                    modifier = Modifier.size(80.dp),
-                    painter = painterResource(id = R.drawable.ic_add_photo),
-                    contentDescription = null,
-                    tint = Color.Gray
-                )
-
+                if (coverImageUri != null) {
+                    AsyncImage(
+                        model = coverImageUri!!.toUri(),
+                        contentDescription = stringResource(R.string.playlist_cover),
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        modifier = Modifier.size(80.dp),
+                        painter = painterResource(id = R.drawable.ic_add_photo),
+                        contentDescription = stringResource(R.string.add_cover),
+                        tint = Color.Gray
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -126,21 +187,35 @@ fun CreatePlaylistScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Кнопка "Создать"
+            val isButtonEnabled = name.isNotEmpty()
             Button(
                 onClick = {
-                    if (name.isNotEmpty()) {
-                        playlistsViewModel.createNewPlayList(name, description)
+                    scope.launch {
+                        val playlistId = playlistsViewModel.createNewPlayList(name, description, null)
+
+                        selectedImageUri?.let { uri ->
+                            val savedImagePath = ImageStorage.saveImage(context, uri, playlistId)
+                            savedImagePath?.let { path ->
+                                val imageUri = ImageStorage.getImageUri(context, path)?.toString()
+                                playlistsViewModel.updatePlaylist(playlistId, name, description, imageUri)
+                            }
+                        } ?: run {
+                            playlistsViewModel.updatePlaylist(playlistId, name, description, null)
+                        }
+                        
                         navigateBack()
                     }
                 },
+                enabled = isButtonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9E9E9E),
+                    containerColor = if (isButtonEnabled) Color(0xFF2196F3) else Color(0xFF9E9E9E),
                     contentColor = Color.White,
+                    disabledContainerColor = Color(0xFF9E9E9E),
+                    disabledContentColor = Color.White
                 )
             ) {
                 Text(

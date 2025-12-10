@@ -74,7 +74,6 @@ fun TrackDetailsScreen(
                 .padding(padding)
         ) {
 
-            // Картинка альбома строго по центру
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -133,8 +132,6 @@ fun TrackDetailsScreen(
                     color = Color(0xFF444444)
                 )
             }
-
-                //Spacer(modifier = Modifier.weight(1f))
 
             Row(
                 modifier = Modifier
@@ -205,7 +202,8 @@ fun TrackDetailsScreen(
     if (showPlaylistSheet) {
         ModalBottomSheet(
             onDismissRequest = { showPlaylistSheet = false },
-            modifier = Modifier.fillMaxHeight(0.7f)
+            modifier = Modifier.fillMaxHeight(0.7f),
+            containerColor = Color.White
         ) {
             Column(
                 modifier = Modifier

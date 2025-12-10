@@ -70,7 +70,6 @@ fun FavoritesScreen(
             if (favoriteTracks.isEmpty()) {
                 EmptyFavoritesState()
             } else {
-                // List of favorite tracks
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()

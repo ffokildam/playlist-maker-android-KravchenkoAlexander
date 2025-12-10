@@ -17,5 +17,7 @@ interface TracksRepository {
     suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean)
     
     suspend fun deleteTracksByPlaylistId(playlistId: Long)
+    
+    suspend fun moveTracksToPlaylist(fromPlaylistId: Long, toPlaylistId: Long)
 }
 

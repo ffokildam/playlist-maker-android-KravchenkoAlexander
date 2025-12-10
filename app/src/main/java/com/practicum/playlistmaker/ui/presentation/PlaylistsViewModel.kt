@@ -20,11 +20,15 @@ class PlaylistsViewModel(application: Application) : AndroidViewModel(applicatio
 
     val playlists: Flow<List<Playlist>> = playlistsRepository.getAllPlaylists()
     val favoriteList: Flow<List<Track>> = tracksRepository.getFavoriteTracks()
+    
+    fun getPlaylist(playlistId: Long): Flow<Playlist?> = playlistsRepository.getPlaylist(playlistId)
 
-    fun createNewPlayList(namePlaylist: String, description: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            playlistsRepository.addNewPlaylist(namePlaylist, description)
-        }
+    suspend fun createNewPlayList(namePlaylist: String, description: String, coverImageUri: String? = null): Long {
+        return playlistsRepository.addNewPlaylist(namePlaylist, description, coverImageUri)
+    }
+    
+    suspend fun updatePlaylist(id: Long, name: String, description: String, coverImageUri: String?) {
+        playlistsRepository.updatePlaylist(id, name, description, coverImageUri)
     }
 
     suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
@@ -42,6 +46,10 @@ class PlaylistsViewModel(application: Application) : AndroidViewModel(applicatio
     suspend fun deletePlaylistById(id: Long) {
         tracksRepository.deleteTracksByPlaylistId(id)
         playlistsRepository.deletePlaylistById(id)
+    }
+    
+    suspend fun mergePlaylists(fromPlaylistId: Long, toPlaylistId: Long) {
+        playlistsRepository.mergePlaylists(fromPlaylistId, toPlaylistId)
     }
 
     suspend fun isExist(track: Track): Track? {

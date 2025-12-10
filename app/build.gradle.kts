@@ -62,12 +62,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
     implementation("androidx.activity:activity-ktx:1.10.1")
     implementation("androidx.navigation:navigation-compose:2.8.3")
-    
-    // Retrofit for network requests
+
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-    
-    // Coil for image loading
+
     implementation(libs.coil.compose)
     
     // Room database

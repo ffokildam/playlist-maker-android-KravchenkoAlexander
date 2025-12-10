@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.creator
+package com.practicum.playlistmaker.data.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -73,3 +73,4 @@ object Creator {
         return PlaylistsRepositoryImpl(getDatabase())
     }
 }
+

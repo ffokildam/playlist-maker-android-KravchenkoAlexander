@@ -15,9 +15,6 @@ class TrackSearchInteractorImpl(private val repository: TracksRepository) : Trac
         trackId: String,
         onComplete: (TrackModel) -> Unit
     ) {
-        // Имитация загрузки данных трека
-        // В реальном приложении здесь будет запрос к репозиторию
-        // Для примера создаём заглушку
         val trackModel = TrackModel(
             id = trackId,
             name = "Track Name",

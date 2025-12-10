@@ -6,6 +6,7 @@ enum class Screen {
     Settings,
     Playlists,
     CreatePlaylist,
+    PlaylistDetails,
     TrackDetails,
     Favorites
 }

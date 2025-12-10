@@ -6,6 +6,7 @@ import com.practicum.playlistmaker.data.database.toDomain
 import com.practicum.playlistmaker.domain.api.PlaylistsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(
@@ -37,18 +38,37 @@ class PlaylistsRepositoryImpl(
         }
     }
 
-    override suspend fun addNewPlaylist(name: String, description: String) {
-        playlistDao.insertPlaylist(
+    override suspend fun addNewPlaylist(name: String, description: String, coverImageUri: String?): Long {
+        return playlistDao.insertPlaylist(
             PlaylistEntity(
                 name = name,
-                description = description
+                description = description,
+                coverImageUri = coverImageUri
             )
         )
+    }
+    
+    override suspend fun updatePlaylist(id: Long, name: String, description: String, coverImageUri: String?) {
+        val existingPlaylist = playlistDao.getPlaylistById(id).firstOrNull()
+        existingPlaylist?.let {
+            playlistDao.updatePlaylist(
+                it.copy(
+                    name = name,
+                    description = description,
+                    coverImageUri = coverImageUri
+                )
+            )
+        }
     }
 
     override suspend fun deletePlaylistById(id: Long) {
         playlistDao.deletePlaylistById(id)
         trackDao.deleteTracksByPlaylistId(id)
+    }
+    
+    override suspend fun mergePlaylists(fromPlaylistId: Long, toPlaylistId: Long) {
+        trackDao.moveTracksToPlaylist(fromPlaylistId, toPlaylistId)
+        playlistDao.deletePlaylistById(fromPlaylistId)
     }
 }
 

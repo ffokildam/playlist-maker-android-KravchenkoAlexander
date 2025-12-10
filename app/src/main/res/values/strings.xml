@@ -48,5 +48,15 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="playlist_name_required">Название*</string>
     <string name="create">Создать</string>
+    <string name="playlist_cover">Обложка плейлиста</string>
+    <string name="add_cover">Добавить обложку</string>
+    <string name="select_image">Выбрать изображение</string>
+    <string name="permission_required">Для выбора обложки необходимо разрешение на доступ к файлам</string>
+    <string name="menu">Меню</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="playlist_merged">%1$s слит с %2$s</string>
+    <string name="no_playlists_to_merge">Нет других плейлистов для слияния</string>
 
 </resources>

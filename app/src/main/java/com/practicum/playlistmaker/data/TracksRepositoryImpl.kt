@@ -62,5 +62,9 @@ class TracksRepositoryImpl(
     override suspend fun deleteTracksByPlaylistId(playlistId: Long) {
         trackDao.deleteTracksByPlaylistId(playlistId)
     }
+    
+    override suspend fun moveTracksToPlaylist(fromPlaylistId: Long, toPlaylistId: Long) {
+        trackDao.moveTracksToPlaylist(fromPlaylistId, toPlaylistId)
+    }
 }
 

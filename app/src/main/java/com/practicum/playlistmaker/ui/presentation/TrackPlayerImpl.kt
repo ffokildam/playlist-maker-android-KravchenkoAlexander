@@ -10,9 +10,6 @@ class TrackPlayerImpl : TrackPlayer {
         currentObserver = statusObserver
         isPlaying = true
         statusObserver.onPlay()
-        
-        // Имитация прогресса воспроизведения
-        // В реальном приложении здесь будет логика медиаплеера
     }
 
 
@@ -26,7 +23,6 @@ class TrackPlayerImpl : TrackPlayer {
 
     override fun seek(trackId: String, position: Float) {
         if (currentTrackId == trackId) {
-            // Имитация перемотки
             currentObserver?.onProgress(position)
         }
     }
