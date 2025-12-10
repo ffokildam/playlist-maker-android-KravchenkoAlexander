@@ -1,14 +1,11 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.screen
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,18 +18,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
-
-class SettingsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            PlaylistMakerTheme {
-                SettingsScreen(onBackClick = { finish() })
-            }
-        }
-    }
-}
+import com.practicum.playlistmaker.R
 
 @Composable
 fun SettingsScreen(onBackClick: () -> Unit) {
@@ -51,7 +37,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             ) {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onSurface
                     )
