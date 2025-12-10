@@ -5,41 +5,46 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.platform.LocalContext
-import com.practicum.playlistmaker.presentation.SearchState
-import com.practicum.playlistmaker.presentation.SearchViewModel
+import coil.compose.AsyncImage
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.Track
-
+import com.practicum.playlistmaker.ui.presentation.SearchState
+import com.practicum.playlistmaker.ui.presentation.SearchViewModel
 
 @Composable
-fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
+fun SearchScreen(
+    onBackClick: () -> Unit,
+    viewModel: SearchViewModel,
+    onTrackClick: (Track) -> Unit = {}
+) {
     var query by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val screenState by viewModel.searchScreenState.collectAsState()
 
-    Surface(
-        color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Column(
             Modifier
                 .fillMaxWidth()
@@ -52,12 +57,12 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Text(
-                    text = "Поиск",
+                    text = stringResource(R.string.search_title),
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(start = 4.dp)
@@ -74,11 +79,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                     ),
                 contentAlignment = Alignment.CenterStart
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
                         onClick = {
                             if (query.isNotEmpty()) {
@@ -89,7 +90,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     }
@@ -99,7 +100,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                     Box(modifier = Modifier.weight(1f)) {
                         if (query.isEmpty()) {
                             Text(
-                                text = "Поиск",
+                                text = stringResource(R.string.search_placeholder),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 fontSize = 14.sp
                             )
@@ -109,9 +110,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                             value = query,
                             onValueChange = {
                                 query = it
-                                if (it.isEmpty()) {
-                                    viewModel.resetState()
-                                }
+                                if (it.isEmpty()) viewModel.resetState()
                             },
                             singleLine = true,
                             textStyle = LocalTextStyle.current.copy(
@@ -135,7 +134,7 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear",
+                                contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                             )
                         }
@@ -145,23 +144,43 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
 
             when (screenState) {
                 is SearchState.Initial -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Введите строку для поиска")
+                    val history by viewModel.searchHistory.collectAsState()
+                    if (history.isNotEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                history.forEachIndexed { index, historyItem ->
+                                    HistoryItem(
+                                        text = historyItem,
+                                        onClick = {
+                                            query = historyItem
+                                            viewModel.search(historyItem)
+                                        }
+                                    )
+                                    if (index < history.size - 1) {
+                                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                is SearchState.Searching -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
+
+                is SearchState.Searching -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
+
                 is SearchState.Success -> {
                     val tracks = (screenState as SearchState.Success).list
                     LazyColumn(
@@ -169,20 +188,25 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
                             .fillMaxWidth()
                             .padding(top = 12.dp)
                     ) {
-                        items(tracks) { track ->
-                            TrackListItem(track)
-                            HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                    items(tracks) { track ->
+                        TrackListItem(track) {
+                            onTrackClick(track)
                         }
+                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                    }
                     }
                 }
+
                 is SearchState.Fail -> {
                     val error = (screenState as SearchState.Fail).error
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Ошибка: $error", color = Color.Red)
+                        Text(
+                            text = stringResource(R.string.search_error, error),
+                            color = Color.Red
+                        )
                     }
                 }
             }
@@ -191,21 +215,76 @@ fun SearchScreen(onBackClick: () -> Unit, viewModel: SearchViewModel) {
 }
 
 @Composable
-private fun TrackListItem(track: Track) {
-    val context = LocalContext.current
+fun TrackListItem(track: Track, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                Toast.makeText(context, track.trackName, Toast.LENGTH_SHORT).show()
-            }
+            .clickable(onClick = onClick)
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            if (track.artworkUrl100 != null) {
+                AsyncImage(
+                    model = track.artworkUrl100,
+                    contentDescription = track.trackName,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(4.dp))
+                )
+            } else {
+                Icon(
+                    modifier = Modifier.size(32.dp),
+                    painter = painterResource(id = R.drawable.ic_playlist),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
         Column(modifier = Modifier.weight(1f)) {
             Text(text = track.trackName, style = MaterialTheme.typography.bodyLarge)
-            Text(text = track.artistName, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                text = track.artistName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
         Text(text = track.trackTime, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+fun HistoryItem(
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Default.Refresh,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

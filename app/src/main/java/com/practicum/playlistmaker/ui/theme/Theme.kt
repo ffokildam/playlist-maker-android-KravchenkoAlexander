@@ -11,7 +11,7 @@ private val LightColors = lightColorScheme(
     surface = LightSurface,
     onSurface = LightOnSurface,
     primary = Color(0xFF3772E7),
-    surfaceVariant = LightSearchField // цвет поля поиска
+    surfaceVariant = LightSearchField
 )
 
 private val DarkColors = darkColorScheme(
@@ -19,7 +19,7 @@ private val DarkColors = darkColorScheme(
     surface = DarkSurface,
     onSurface = DarkOnSurface,
     primary = Color(0xFF3772E7),
-    surfaceVariant = DarkSearchField // цвет поля поиска
+    surfaceVariant = DarkSearchField
 )
 
 @Composable

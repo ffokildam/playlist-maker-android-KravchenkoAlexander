@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.ui.presentation
 
 class TrackPlayerImpl : TrackPlayer {
     private var currentObserver: TrackPlayer.StatusObserver? = null
@@ -10,9 +10,6 @@ class TrackPlayerImpl : TrackPlayer {
         currentObserver = statusObserver
         isPlaying = true
         statusObserver.onPlay()
-        
-        // Имитация прогресса воспроизведения
-        // В реальном приложении здесь будет логика медиаплеера
     }
 
 
@@ -26,7 +23,6 @@ class TrackPlayerImpl : TrackPlayer {
 
     override fun seek(trackId: String, position: Float) {
         if (currentTrackId == trackId) {
-            // Имитация перемотки
             currentObserver?.onProgress(position)
         }
     }
